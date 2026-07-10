@@ -26,13 +26,24 @@ export function useShoppingList() {
   }, [spendingLimit]);
 
   const addItem = (title: string, costAmount: number) => {
-    const newItem: GroceryItem = {
-      id: crypto.randomUUID(),
-      title,
-      cost: costAmount,
-      isChecked: false,
-    };
-    setItems((prev) => [...prev, newItem]);
+    const trimmedTitle = title.trim();
+
+    setItems((prev) => {
+      const alreadyExists = prev.some(
+        (item) => item.title.toLowerCase() === trimmedTitle.toLowerCase()
+      );
+      if (alreadyExists) {
+        return prev;
+      }
+
+      const newItem: GroceryItem = {
+        id: crypto.randomUUID(),
+        title: trimmedTitle,
+        cost: costAmount,
+        isChecked: false,
+      };
+      return [...prev, newItem];
+    });
   };
 
   const toggleItemStatus = (id: string) => {
