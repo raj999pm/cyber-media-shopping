@@ -1,6 +1,5 @@
 import { useShoppingList } from "./hooks/useShoppingList";
 import { ItemForm } from "./components/ItemForm";
-import type { GroceryItem } from "./types/grocery";
 export default function App() {
   const {
     items,
@@ -9,6 +8,7 @@ export default function App() {
     addItem,
     toggleItemStatus,
     deleteItem,
+    moveItem,
     absoluteTotal,
     budgetBreached,
   } = useShoppingList();
@@ -64,7 +64,7 @@ export default function App() {
           </div>
         ) : (
           <ul className="space-y-2.5">
-            {items.map((item) => (
+            {items.map((item, index) => (
               <li
                 key={item.id}
                 className={`flex items-center justify-between rounded-xl p-3 border transition-all duration-200 ${
@@ -88,7 +88,25 @@ export default function App() {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-3 ml-2">
+                <div className="flex items-center gap-2 ml-2">
+                  <div className="flex flex-col">
+                    <button
+                      onClick={() => moveItem(item.id, 'up')}
+                      disabled={index === 0}
+                      className="text-slate-400 hover:text-emerald-600 disabled:opacity-20 disabled:hover:text-slate-400 leading-none"
+                      aria-label={`Move ${item.title} up`}
+                    >
+                      ▲
+                    </button>
+                    <button
+                      onClick={() => moveItem(item.id, 'down')}
+                      disabled={index === items.length - 1}
+                      className="text-slate-400 hover:text-emerald-600 disabled:opacity-20 disabled:hover:text-slate-400 leading-none"
+                      aria-label={`Move ${item.title} down`}
+                    >
+                      ▼
+                    </button>
+                  </div>
                   {/* Add data-testid here */}
                   <span
                     data-testid="item-cost"

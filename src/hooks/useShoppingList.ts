@@ -58,6 +58,20 @@ export function useShoppingList() {
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
+  const moveItem = (id: string, direction: 'up' | 'down') => {
+    setItems((prev) => {
+      const index = prev.findIndex((item) => item.id === id);
+      if (index === -1) return prev;
+
+      const targetIndex = direction === 'up' ? index - 1 : index + 1;
+      if (targetIndex < 0 || targetIndex >= prev.length) return prev;
+
+      const updated = [...prev];
+      [updated[index], updated[targetIndex]] = [updated[targetIndex], updated[index]];
+      return updated;
+    });
+  };
+
   const absoluteTotal = items.reduce((acc, item) => acc + (item.cost ?? 0), 0);
   const budgetBreached = spendingLimit > 0 && absoluteTotal > spendingLimit;
 
@@ -68,6 +82,7 @@ export function useShoppingList() {
     addItem,
     toggleItemStatus,
     deleteItem,
+    moveItem,
     absoluteTotal,
     budgetBreached,
   };
